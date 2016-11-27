@@ -34,9 +34,9 @@ public:
     // set the key you have to hold for saving
     void setModeKey( int key );
 
-    void keyPressed( ofKeyEventArgs& eventArgs);
-    void keyReleased( ofKeyEventArgs& eventArgs );
-
+    // draw some info startin from x,y with each cell rapresenting a key having the size equal to cellSize
+    void draw( int x, int y, int cellSize );
+    
 private:
     
     int getGuiIndex(string name ) const;
@@ -46,6 +46,8 @@ private:
     vector<int>         lastIndices;
 
     void addKeysListeners();
+    void keyPressed( ofKeyEventArgs& eventArgs);
+    void keyReleased( ofKeyEventArgs& eventArgs );
     
     vector<vector<int>> keys;
     bool                keysNotActivated;

@@ -149,3 +149,20 @@ void ofxGuiPresetSelector::addKeysListeners(){
     ofAddListener( ofEvents().keyReleased, this, &ofxGuiPresetSelector::keyReleased );
     keysNotActivated = false;
 }
+
+
+void ofxGuiPresetSelector::draw( int x, int y, int cellSize ) {
+        
+    ofPushMatrix();
+        ofTranslate(x, y);
+        for(size_t i=0; i<keys.size(); ++i){
+            size_t k=0;
+            for(; k<keys[i].size(); ++k){
+                ofDrawRectangle( cellSize*k, cellSize*i, cellSize, cellSize );
+                ofDrawBitmapString( ofToString((char)keys[i][k]), cellSize*k+8, cellSize*i+18 );
+                if( lastIndices[i]==k ) ofDrawRectangle( cellSize*k+4, cellSize*i+4, cellSize-8, cellSize-8 );
+            }
+            ofDrawBitmapString( guis[i]->getName(), cellSize*k+8, cellSize*i+18 );
+        }
+    ofPopMatrix();
+}

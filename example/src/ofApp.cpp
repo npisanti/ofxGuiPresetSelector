@@ -54,7 +54,10 @@ void ofApp::draw(){
         }
     ofPopMatrix();
         
+    selector.draw( 20, 360, 50 ); // draws some graphics to monitor the active preset
+        
     ofDrawBitmapString( "press 1-5 for loading a preset, press CTRL+1-5 for saving presets", 20, ofGetHeight() - 30 );
+    
 }
 
 //--------------------------------------------------------------
