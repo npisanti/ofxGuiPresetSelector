@@ -14,7 +14,7 @@ void ofApp::setup(){
     gui.add( squareSide.set("square side", 50, 5, 200) );
     
     selector.add( gui, { '1', '2', '3', '4', '5'} ); 
-    // selector.add( gui ); // add without activating key switch
+    // selector.add( gui, 6 ); // add without activating key switch, 6 presets
     // selector.add( anotherGui, {'q', 'w', 'e', 'r', 't', 'y'} ); // add another gui with other keys
     // selector.setModeKey( OF_KEY_TAB ); // change the key you have to hold for saving 
                                           // remember that the switch key change the keycodes
@@ -22,8 +22,16 @@ void ofApp::setup(){
 
     // remember to have a bin/data folder in your app directories
     // the first time you save you probably have to press the key twices, the first it just create the .xml file
-   
-    selector.load(0, 1); // load the second preset of the first added gui
+    
+    // x, y, button size
+    selector.setPosition( 20, 360, 50 );
+
+    selector.load( 1 ); // load the second preset of the first added gui
+    //selector.load( 0, 1 ); // load the first preset of the second added gui
+
+    // remember to have a bin/data folder in your app directories
+    // there are alredy 3 saved presets in the bin/data folder of this example
+    
 }
 
 //--------------------------------------------------------------
@@ -54,9 +62,13 @@ void ofApp::draw(){
         }
     ofPopMatrix();
         
-    selector.draw( 20, 360, 50 ); // draws some graphics to monitor the active preset
+    selector.draw(); // draws some minimalistic graphics to monitor the active preset
+                     // when graphics are drawn you can also click on them for saving/loading
         
-    ofDrawBitmapString( "press 1-5 for loading a preset, press CTRL+1-5 for saving presets", 20, ofGetHeight() - 30 );
+    string info = "press 1-5 for loading a preset, press CTRL+1-5 for saving presets\n";
+    info += "or click on the selector buttons above\n";
+    info += "the last button save the currently selected preset";
+    ofDrawBitmapString( info , 20, ofGetHeight() - 40 );
     
 }
 
