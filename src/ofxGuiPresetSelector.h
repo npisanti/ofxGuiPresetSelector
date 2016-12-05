@@ -41,6 +41,14 @@ public:
     void draw();
     void draw( int x, int y, int cellSize );
     
+    // if you set it to true the preset will be loaded only when you call (false is the default behavior)
+    void setDelayedLoading( bool active );
+    // make preset change effective when setDelayedLoading() is set to true
+    void delayedUpdate();
+    // if setDelayedLoading() is set to true stages a load action
+    void delayedLoad( int presetIndex, int guiIndex=0 ); 
+    void delayedLoad( int presetIndex, string guiName );
+    
 private:
     int getGuiIndex(string name ) const;
     string presetName( string guiName, int presetIndex );
@@ -65,4 +73,6 @@ private:
     bool    lastMouseButtonState;
     void    mousePressed( int x, int y );
     
+    bool                bDelayedLoading;
+    vector<int>         newIndices;
 };

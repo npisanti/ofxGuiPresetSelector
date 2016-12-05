@@ -16,6 +16,7 @@ ofxGuiPresetSelector::ofxGuiPresetSelector(){
     
     lastMouseButtonState = false;
 
+    bDelayedLoading = false;
 }
 
 
@@ -39,6 +40,7 @@ string ofxGuiPresetSelector::presetName( string guiName, int presetIndex ) {
 void ofxGuiPresetSelector::add( ofxPanel & gui, int numPresets ) {
     guis.push_back( &gui );
     lastIndices.push_back( 0 );
+    newIndices.push_back( 0 );
     presets.push_back(numPresets);
 }
 
@@ -132,7 +134,11 @@ void ofxGuiPresetSelector::keyPressed( ofKeyEventArgs& eventArgs ) {
                 if(bKeySave){
                     save( k, i);
                 }else{
-                    load( k, i );
+                    if(bDelayedLoading){
+                        newIndices[i] = k;
+                    }else{
+                        load( k, i );
+                    }
                 }
                 
                 return;
@@ -155,18 +161,18 @@ void ofxGuiPresetSelector::addKeysListeners(){
 }
 
 
-
-
 void ofxGuiPresetSelector::setPosition( int x, int y, int cellSize ) {
     this->x = x;
     this->y = y;
     this->cellSize = cellSize;
 }
 
+
 void ofxGuiPresetSelector::draw( int x, int y, int cellSize ) {
     setPosition(x, y, cellSize);    
     draw();
 }
+
 
 void ofxGuiPresetSelector::draw( ) {
     
@@ -176,6 +182,8 @@ void ofxGuiPresetSelector::draw( ) {
     lastMouseButtonState = ofGetMousePressed();
     
     ofPushMatrix();
+    ofPushStyle();
+        ofNoFill();
         ofTranslate(x, y);
         for(size_t i=0; i<keys.size(); ++i){
             size_t k=0;
@@ -199,6 +207,7 @@ void ofxGuiPresetSelector::draw( ) {
             k++;
             ofDrawBitmapString( guis[i]->getName(), cellSize*k+8, cellSize*i+18 );
         }
+    ofPopStyle();
     ofPopMatrix();
 }
 
@@ -217,10 +226,43 @@ void ofxGuiPresetSelector::mousePressed( int x, int y ) {
     if( yIndex >=0 &&  yIndex < (int)guis.size() ){
         if(xIndex>=0 && xIndex< presets[yIndex] ){
             //load
-            load( xIndex, yIndex);
+            if(bDelayedLoading){
+                newIndices[yIndex] = xIndex;
+            }else{
+                load( xIndex, yIndex);
+            }
         }else if( xIndex == presets[yIndex]){
             // save
             save( lastIndices[yIndex], yIndex );
         }
     }
 }  
+
+
+void ofxGuiPresetSelector::setDelayedLoading( bool active ) {
+    bDelayedLoading = active;
+}
+
+
+void ofxGuiPresetSelector::delayedLoad( int presetIndex, int guiIndex ) {
+    if(guiIndex>=0 && guiIndex<(int)guis.size()){
+        newIndices[guiIndex] = presetIndex;
+    }
+}
+
+
+void ofxGuiPresetSelector::delayedLoad( int presetIndex, string guiName ) {
+    int guiIndex = getGuiIndex(guiName);
+    if(guiIndex>=0 && guiIndex<(int)guis.size()){
+        newIndices[guiIndex] = presetIndex;
+    } 
+}
+
+
+void ofxGuiPresetSelector::delayedUpdate() {
+    for(size_t i=0; i<guis.size(); ++i){
+        if(newIndices[i]!=lastIndices[i]){
+            load( newIndices[i], i);
+        }
+    }
+}
