@@ -49,6 +49,9 @@ public:
     void delayedLoad( int presetIndex, int guiIndex=0 ); 
     void delayedLoad( int presetIndex, string guiName );
     
+    // switch on or off the control with the keys
+    void toggleKeysControl( bool active );
+    
 private:
     int getGuiIndex(string name ) const;
     string presetName( string guiName, int presetIndex );
@@ -61,6 +64,7 @@ private:
     void keyPressed( ofKeyEventArgs& eventArgs);
     void keyReleased( ofKeyEventArgs& eventArgs );
     
+    bool				bKeys;
     vector<vector<int>> keys;
     bool                keysNotActivated;
     int                 modeKey;

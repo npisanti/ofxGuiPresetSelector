@@ -7,6 +7,7 @@
 ofxGuiPresetSelector::ofxGuiPresetSelector(){
         
     modeKey = OF_KEY_CONTROL;
+    bKeys = false;
     keysNotActivated = true;
     bKeySave = false;
     
@@ -118,34 +119,34 @@ void ofxGuiPresetSelector::setModeKey( int key ){
 }
 
 
-void ofxGuiPresetSelector::keyPressed( ofKeyEventArgs& eventArgs ) {
-    
-    const int & key = eventArgs.key;
-    
-    if(key == modeKey){
-        bKeySave = true;
-        return;
-    } 
-    
-    for(size_t i=0; i<keys.size(); ++i){
-        for(size_t k=0; k<keys[i].size(); ++k){
-            if(key == keys[i][k]){
-                
-                if(bKeySave){
-                    save( k, i);
-                }else{
-                    if(bDelayedLoading){
-                        newIndices[i] = k;
-                    }else{
-                        load( k, i );
-                    }
-                }
-                
-                return;
-            }
-        }   
+void ofxGuiPresetSelector::keyPressed( ofKeyEventArgs& eventArgs ) {    
+    if( bKeys ){
+		const int & key = eventArgs.key;
+		
+		if(key == modeKey){
+			bKeySave = true;
+			return;
+		} 
+		
+		for(size_t i=0; i<keys.size(); ++i){
+			for(size_t k=0; k<keys[i].size(); ++k){
+				if(key == keys[i][k]){
+					
+					if(bKeySave){
+						save( k, i);
+					}else{
+						if(bDelayedLoading){
+							newIndices[i] = k;
+						}else{
+							load( k, i );
+						}
+					}
+					
+					return;
+				}
+			}   
+		}
     }
-    
 }
 
 
@@ -158,6 +159,7 @@ void ofxGuiPresetSelector::addKeysListeners(){
     ofAddListener( ofEvents().keyPressed, this, &ofxGuiPresetSelector::keyPressed );
     ofAddListener( ofEvents().keyReleased, this, &ofxGuiPresetSelector::keyReleased );
     keysNotActivated = false;
+	bKeys = true;
 }
 
 
@@ -265,4 +267,8 @@ void ofxGuiPresetSelector::delayedUpdate() {
             load( newIndices[i], i);
         }
     }
+}
+
+void ofxGuiPresetSelector::toggleKeysControl( bool active ) {
+	bKeys = active;
 }
